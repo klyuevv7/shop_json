@@ -1,0 +1,13 @@
+package org.example.controller;
+
+import org.example.model.Consumer;
+
+import java.sql.SQLException;
+import java.util.List;
+
+public interface ServiceControllerOperations {
+    List<Consumer> findConsumerBySurname(String lastName) throws SQLException;
+    List<Consumer> findConsumerByCountProductBuy(String nameProduct, int CountProductBuy);
+    List<Consumer> findConsumerByIntervalExpensesAllBuy(int minExpensesAllBuy, int maxExpensesAllBuy);
+    List<Consumer> findBadConsumerByCountProductBuy(int countBadConsumer);
+}
