@@ -1,5 +1,6 @@
 package org.example.controller;
 
+import org.example.model.Buy;
 import org.example.model.Consumer;
 
 import java.sql.ResultSet;
@@ -17,17 +18,25 @@ public class SearchController implements ServiceControllerOperations {
     @Override
     public List<Consumer> findConsumerBySurname(String lastName) throws SQLException {
         ResultSet resultSet =  daoOperations.findConsumerBySurname(lastName);
-        List<Consumer> list = new ArrayList<>();
+        List<Consumer> listConsumer = new ArrayList<>();
         while (resultSet.next())
-            list.add(new Consumer(Long.parseLong(resultSet.getString(1)),
-                                                 resultSet.getString(2),
-                                                 resultSet.getString(3)));
-        return list;
+            listConsumer.add(new Consumer(Long.parseLong(resultSet.getString(1)),
+                                                         resultSet.getString(2),
+                                                         resultSet.getString(3)));
+        return listConsumer;
     }
 
     @Override
-    public List<Consumer> findConsumerByCountProductBuy(String nameProduct, int CountProductBuy) {
-        return null;
+    public List<Consumer> findConsumerByCountProductBuy(String nameProduct, int CountProductBuy)
+                                             throws SQLException {
+        ResultSet resultSet =  daoOperations.findBuyByProduct(nameProduct);
+        List<Buy> listBuyByProduct = new ArrayList<>();
+        while (resultSet.next())
+            listBuyByProduct.add(new Buy(Long.parseLong(resultSet.getString(1)),
+                    Long.parseLong(resultSet.getString(2)),
+                    Long.parseLong(resultSet.getString(3)),
+                    Date    resultSet.getString(3)));
+        return
     }
 
     @Override

@@ -19,6 +19,7 @@ org\example\view\Criterion3.class
 org\example\view\Criterion2.class
 org\example\service\SelectCriterion.class
 org\example\controller\DaoOperations.class
+org\example\service\searchofcriterians\SearchOfCriterionBadCustomers.class
 org\example\service\searchofcriterians\SearchOfCriterionProductName.class
 org\example\controller\ServiceControllerOperations.class
 org\example\view\InputJsonOfTypeSearch.class
@@ -26,3 +27,4 @@ org\example\dao\JDBCPostgreSQL.class
 org\example\view\Criterion4.class
 org\example\view\Criterion.class
 org\example\dao\DaoShop.class
+org\example\service\searchofcriterians\SearchOfCriterionExpenses.class

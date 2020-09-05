@@ -7,7 +7,7 @@ import java.util.List;
 public interface DaoOperations {
     ResultSet findConsumerBySurname(String surname) throws SQLException;
 
-//    ResultSet findBuyByProduct(String ProductName);
+    ResultSet findBuyByProduct(String ProductName);
 //    List<ResultSet> findConsumersById(List<Long> ListId);
 
 //    ResultSet findBuyByConsumer();

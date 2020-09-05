@@ -1,6 +1,7 @@
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\controller\StatController.java
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\service\RequestService.java
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\dao\JDBCPostgreSQL.java
+C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\service\searchofcriterians\SearchOfCriterionBadCustomers.java
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\service\searchofcriterians\SearchOfCriterionLastName.java
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\service\searchofcriterians\SearchOfCriterion.java
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\view\JsonInputOutput.java
@@ -13,6 +14,7 @@ C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\controller\SearchCont
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\model\Product.java
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\dao\CreateTablesTest.java
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\service\SelectCriterion.java
+C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\service\searchofcriterians\SearchOfCriterionExpenses.java
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\controller\ServiceControllerOperations.java
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\service\JsonStatService.java
 C:\Users\vliv2\IdeaProjects\shop\src\main\java\org\example\model\Consumer.java

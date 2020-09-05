@@ -29,6 +29,12 @@ public class DaoShop implements DaoOperations {
         }
         return null;
     }
+
+    @Override
+    public ResultSet findBuyByProduct(String ProductName) {
+        return ;
+    }
+
     public static void main(String[] args) throws SQLException {
         ResultSet resultSet = new DaoShop(new JDBCPostgreSQL().connection()).findConsumerBySurname("Иванов");
 
