@@ -2,7 +2,6 @@ package org.example.controller;
 
 import org.example.model.Buy;
 import org.example.model.Consumer;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,9 +19,9 @@ public class SearchController implements ServiceControllerOperations {
         ResultSet resultSet =  daoOperations.findConsumerBySurname(lastName);
         List<Consumer> listConsumer = new ArrayList<>();
         while (resultSet.next())
-            listConsumer.add(new Consumer(Long.parseLong(resultSet.getString(1)),
-                                                         resultSet.getString(2),
-                                                         resultSet.getString(3)));
+            listConsumer.add(new Consumer(resultSet.getLong(1),
+                                          resultSet.getString(2),
+                                          resultSet.getString(3)));
         return listConsumer;
     }
 
@@ -32,11 +31,11 @@ public class SearchController implements ServiceControllerOperations {
         ResultSet resultSet =  daoOperations.findBuyByProduct(nameProduct);
         List<Buy> listBuyByProduct = new ArrayList<>();
         while (resultSet.next())
-            listBuyByProduct.add(new Buy(Long.parseLong(resultSet.getString(1)),
-                    Long.parseLong(resultSet.getString(2)),
-                    Long.parseLong(resultSet.getString(3)),
-                    Date    resultSet.getString(3)));
-        return
+            listBuyByProduct.add(new Buy(resultSet.getLong(1),
+                                         resultSet.getLong(2),
+                                         resultSet.getLong(3),
+                                         resultSet.getDate(4)));
+        return ;
     }
 
     @Override

@@ -11,6 +11,13 @@ public class Buy {
     public Buy() {
     }
 
+    public Buy(long id, long consumerId, long productId, Date date) {
+        this.id = id;
+        this.consumerId = consumerId;
+        this.productId = productId;
+        this.date = date;
+    }
+
     public long getId() {
         return id;
     }
