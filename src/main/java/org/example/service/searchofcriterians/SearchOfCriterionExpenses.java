@@ -3,6 +3,8 @@ package org.example.service.searchofcriterians;
 import org.example.controller.ServiceControllerOperations;
 import org.example.model.Consumer;
 import org.json.JSONObject;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,8 @@ public class SearchOfCriterionExpenses implements SearchOfCriterion{
         this.searchController = searchController;
     }
 
-    public String findConsumerByIntervalExpensesAllBuy(int minExpensesAllBuy, int maxExpensesAllBuy) {
+    public String findConsumerByIntervalExpensesAllBuy(int minExpensesAllBuy, int maxExpensesAllBuy)
+                                                                            throws SQLException {
         List<Consumer> listConsumers =
                 searchController.findConsumerByIntervalExpensesAllBuy(minExpensesAllBuy, maxExpensesAllBuy);
         List<JSONObject> jsonObjectList = new ArrayList<>();
@@ -23,7 +26,7 @@ public class SearchOfCriterionExpenses implements SearchOfCriterion{
     }
 
     @Override
-    public String result(JSONObject jsonObject) {
+    public String result(JSONObject jsonObject) throws SQLException {
         return findConsumerByIntervalExpensesAllBuy((int) jsonObject.get("minExpenses"),
                 (int) jsonObject.get("maxExpenses"));
     }

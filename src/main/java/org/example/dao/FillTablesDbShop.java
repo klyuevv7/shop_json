@@ -49,7 +49,8 @@ public class FillTablesDbShop {
             }
             System.out.println();
             System.out.println("Таблица buy:");
-//            for (int i; i < 7; i++)
+//            for (int i = 0; i < 2; i++)
+//            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (6, 1, '2020-05-29')");
 //            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (4, 2, '2020-05-24')");
 //            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (7, 2, '2020-05-26')");
 //            statement.executeUpdate("INSERT INTO public.product(name, price) VALUES ('Хлеб', 40)");

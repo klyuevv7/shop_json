@@ -92,7 +92,11 @@ public class SearchController implements ServiceControllerOperations {
                                    resultSet.getLong(2),
                                    resultSet.getLong(3),
                                    resultSet.getDate(4)));
-
+//bbbbb
+        System.out.println("resultSet: "+ resultSet);
+        System.out.println("listAllBuy:");
+        for (Buy buy : listAllBuy)
+        System.out.println(buy);
         resultSet =  daoOperations.findAllProduct();
         List<Product> listAllProduct = new ArrayList<>();
         while (resultSet.next())

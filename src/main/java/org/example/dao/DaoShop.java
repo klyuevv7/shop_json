@@ -36,7 +36,7 @@ public class DaoShop implements DaoOperations {
             ResultSet result = statement.executeQuery(
                     "SELECT id FROM public.product where name = '"+ productName + "'");
             long productId = 0;
-            if (result.next()) productId = result.getLong(0);
+            if (result.next()) productId = result.getLong(1);
             result = statement.executeQuery(
                     "SELECT * FROM public.buy where product = '"+ productId + "'");
             return result;
