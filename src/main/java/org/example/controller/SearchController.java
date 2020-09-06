@@ -92,8 +92,6 @@ public class SearchController implements ServiceControllerOperations {
                                    resultSet.getLong(2),
                                    resultSet.getLong(3),
                                    resultSet.getDate(4)));
-//----------
-        
 
         resultSet =  daoOperations.findAllProduct();
         List<Product> listAllProduct = new ArrayList<>();
@@ -101,19 +99,108 @@ public class SearchController implements ServiceControllerOperations {
             listAllProduct.add(new Product(resultSet.getLong(1),
                                            resultSet.getString(2),
                                            resultSet.getInt(3)));
-
-        return null
+// Создание множества: ключ - идентификатор покупателя, значение - множество,
+// где ключ идентификатор товара, значение - количество покупок данного товара
+        Map<Long,Map<Long,Long>> mapConsumerIdAndProductId = new HashMap<>();
+        Map<Long,Long> mapProductIdAndCount = null;
+        for (Buy buy: listAllBuy) {
+                if(mapConsumerIdAndProductId.containsKey(buy.getConsumerId())){
+                    if(mapConsumerIdAndProductId.get(buy.getConsumerId()).containsKey(buy.getProductId())) {
+                        Long count =
+                        mapConsumerIdAndProductId.get(buy.getConsumerId()).get(buy.getProductId()) + 1;
+                        mapConsumerIdAndProductId.get(buy.getConsumerId()).put(buy.getProductId(),count);
+                    } else {
+                        mapConsumerIdAndProductId.get(buy.getConsumerId()).put(buy.getProductId(),1L);
+                    }
+                } else {
+                    mapProductIdAndCount = new HashMap<>();
+                    mapProductIdAndCount.put(buy.getProductId(),1L);
+                    mapConsumerIdAndProductId.put(buy.getConsumerId(),mapProductIdAndCount);
+                }
+        }
+// Создание множества: ключ - идентификатор покупателя, значение - множество,
+// где ключ идентификатор товара, значение - стоимость покупок данного товара
+        Map<Long,Map<Long,Long>> mapConsumerIdAndProductExpenses = new HashMap<>();
+        Map<Long,Long> mapProductIdAndExpenses = null;
+        for (Map.Entry<Long,Map<Long,Long>> item : mapConsumerIdAndProductId.entrySet()) {
+            mapProductIdAndExpenses = new HashMap<>();
+            for (Product product: listAllProduct)
+                if (item.getValue().containsKey(product.getId())) {
+                    long count = item.getValue().get(product.getId());
+                    long expenses = product.getPrice() * count;
+                    mapProductIdAndExpenses.put(product.getId(), expenses);
+                    break;
+                }
+            mapConsumerIdAndProductExpenses.put(item.getKey(),mapProductIdAndExpenses);
+        }
+// Создание множества: ключ - идентификатор покупателя, значение - все расходы
+        Map<Long,Long> mapConsumerIdAndAllExpenses = new HashMap<>();
+        for (Map.Entry<Long,Map<Long,Long>> item : mapConsumerIdAndProductExpenses.entrySet()) {
+            long allExpenses = 0;
+            for (Long productId : item.getValue().keySet())
+                allExpenses += item.getValue().get(productId);
+            mapConsumerIdAndAllExpenses.put(item.getKey(),allExpenses);
+        }
+// Создание списка покупателей, у которых общая стоимость всех покупок за всё время попадает в интервал
+        List<Consumer> resultListConsumer = new ArrayList<>();
+        for (Long consumerId : mapConsumerIdAndAllExpenses.keySet()) {
+            long allExpenses = mapConsumerIdAndAllExpenses.get(consumerId);
+            if(allExpenses > minExpensesAllBuy && allExpenses < maxExpensesAllBuy) {
+                resultSet =  daoOperations.findConsumersById(consumerId);
+                if (resultSet.next())
+                    resultListConsumer.add(new Consumer(resultSet.getLong(1),
+                                                        resultSet.getString(2),
+                                                        resultSet.getString(3)));
+            }
+        }
+        return resultListConsumer;
     }
-
     /**
      *  Поиск покупателей, купивших меньше всего товаров. Возвращается не более, чем указанное число покупателей.
       * @param countBadConsumer - Число пассивных покупателей
      * @return Возвращает список покупателей (объектов Consumer),
      *         купивших меньше всего товаров. Возвращается не более, чем указанное число покупателей.
      */
-
     @Override
-    public List<Consumer> findBadConsumerByCountProductBuy(int countBadConsumer) {
-        return null;
+    public List<Consumer> findBadConsumerByCountProductBuy(int countBadConsumer) throws SQLException {
+        ResultSet resultSet =  daoOperations.findAllBuy();
+        List<Buy> listAllBuy = new ArrayList<>();
+        while (resultSet.next())
+            listAllBuy.add(new Buy(resultSet.getLong(1),
+                    resultSet.getLong(2),
+                    resultSet.getLong(3),
+                    resultSet.getDate(4)));
+// Создание множества: ключ - идентификатор покупателя, значение - количество покупок товара
+        Map<Long,Long> mapConsumerIdAndCountBuy = new HashMap<>();
+        for (Buy buy: listAllBuy) {
+            long consumerId = buy.getConsumerId();
+            if (mapConsumerIdAndCountBuy.containsKey(consumerId)){
+                long countBuy = mapConsumerIdAndCountBuy.get(consumerId) + 1;
+                mapConsumerIdAndCountBuy.put(consumerId,countBuy);
+            } else {
+                mapConsumerIdAndCountBuy.put(consumerId,1L);
+            }
+        }
+// Создание списка количества покупок и его сортировка
+        List<Long> listCountBuy = new ArrayList<>();
+        for (Long consumerId : mapConsumerIdAndCountBuy.keySet())
+            listCountBuy.add(mapConsumerIdAndCountBuy.get(consumerId));
+        Collections.sort(listCountBuy);
+// Создание списка покупателей, купивших меньше всего товаров.
+// Возвращается не более, чем указанное число покупателей.
+        List<Consumer> resultListConsumer = new ArrayList<>();
+        for (int i = 0; i < countBadConsumer && i < listCountBuy.size(); i++){
+            long findedConsumerId = 0;
+            for (Long consumerId : mapConsumerIdAndCountBuy.keySet())
+                if(listCountBuy.get(i).equals(mapConsumerIdAndCountBuy.get(consumerId))){
+                    findedConsumerId = consumerId; break;
+                }
+            resultSet =  daoOperations.findConsumersById(findedConsumerId);
+            if (resultSet.next())
+                resultListConsumer.add(new Consumer(resultSet.getLong(1),
+                                                    resultSet.getString(2),
+                                                    resultSet.getString(3)));
+        }
+        return resultListConsumer;
     }
 }
