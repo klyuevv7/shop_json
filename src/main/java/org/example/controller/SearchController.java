@@ -2,6 +2,8 @@ package org.example.controller;
 
 import org.example.model.Buy;
 import org.example.model.Consumer;
+import org.example.model.Product;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -81,9 +83,26 @@ public class SearchController implements ServiceControllerOperations {
      *         у которых общая стоимость всех покупок за всё время попадает в интервал
      */
     @Override
-    public List<Consumer> findConsumerByIntervalExpensesAllBuy(int minExpensesAllBuy, int maxExpensesAllBuy) {
+    public List<Consumer> findConsumerByIntervalExpensesAllBuy(int minExpensesAllBuy, int maxExpensesAllBuy)
+                                                                throws SQLException {
+        ResultSet resultSet =  daoOperations.findAllBuy();
+        List<Buy> listAllBuy = new ArrayList<>();
+        while (resultSet.next())
+            listAllBuy.add(new Buy(resultSet.getLong(1),
+                                   resultSet.getLong(2),
+                                   resultSet.getLong(3),
+                                   resultSet.getDate(4)));
+//----------
+        
 
-        return null;
+        resultSet =  daoOperations.findAllProduct();
+        List<Product> listAllProduct = new ArrayList<>();
+        while (resultSet.next())
+            listAllProduct.add(new Product(resultSet.getLong(1),
+                                           resultSet.getString(2),
+                                           resultSet.getInt(3)));
+
+        return null
     }
 
     /**
