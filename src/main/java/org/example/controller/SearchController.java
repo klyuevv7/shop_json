@@ -13,6 +13,12 @@ public class SearchController implements ServiceControllerOperations {
         this.daoOperations = daoOperations;
     }
 
+    /**
+     * Поиск покупателей с этой фамилией
+      * @param lastName - Фамилия
+     * @return Возвращает список покупателей (объектов Consumer) с этой фамилией
+     * @throws SQLException
+     */
     @Override
     public List<Consumer> findConsumerBySurname(String lastName) throws SQLException {
         ResultSet resultSet =  daoOperations.findConsumerBySurname(lastName);
@@ -24,6 +30,14 @@ public class SearchController implements ServiceControllerOperations {
         return listConsumer;
     }
 
+    /**
+     * Поиск покупателей, купивших этот товар не менее, чем указанное число раз
+     * @param nameProduct - Название товара
+     * @param countProductBuy -  Число раз
+     * @return Возвращает список покупателей (объектов Consumer),
+     *         купивших этот товар не менее, чем указанное число раз
+     * @throws SQLException
+     */
     @Override
     public List<Consumer> findConsumerByCountProductBuy(String nameProduct, int countProductBuy)
                                              throws SQLException {
@@ -34,41 +48,50 @@ public class SearchController implements ServiceControllerOperations {
                                          resultSet.getLong(2),
                                          resultSet.getLong(3),
                                          resultSet.getDate(4)));
-// Отсортированное множество: сумма покупок и идентификатор покупателя
-        Map <Long, Long> sortedMapOfSumBuyAndConsumerId = new TreeMap<>();
+// Множество: идентификатор покупателя и сумма покупок
+        Map <Long, Long> mapOfSumBuyAndConsumerId = new HashMap<>();
         for (Buy buy : listBuyByProduct) {
-            if(sortedMapOfSumBuyAndConsumerId.isEmpty()) {
-                sortedMapOfSumBuyAndConsumerId.put(1L, buy.getConsumerId());
-            } else
-            for(Map.Entry<Long, Long> item : sortedMapOfSumBuyAndConsumerId.entrySet()){
-                if(buy.getConsumerId() == item.getValue()){
-                    Long sumBuy = item.getKey() + (long)1;
-                    Long consumerId = item.getValue();
-                    sortedMapOfSumBuyAndConsumerId.remove(item.getKey());
-                    sortedMapOfSumBuyAndConsumerId.put(sumBuy, consumerId);
-                } else {
-                    sortedMapOfSumBuyAndConsumerId.put(1L, buy.getConsumerId());
-                }
+            Long consumerId = buy.getConsumerId();
+            if (mapOfSumBuyAndConsumerId.containsKey(consumerId)) {
+                Long countProduct = mapOfSumBuyAndConsumerId.get(consumerId) + 1;
+                mapOfSumBuyAndConsumerId.put(consumerId, countProduct);
+            } else {
+                mapOfSumBuyAndConsumerId.put(consumerId, 1L);
             }
         }
-
+// Формируется список покупателей, купивших этот товар не менее, чем указанное число раз
         List<Consumer> resultListConsumer = new ArrayList<>();
-        for(Map.Entry<Long, Long> item : sortedMapOfSumBuyAndConsumerId.entrySet()){
-            if(item.getKey() >= countProductBuy){
-                resultSet =  daoOperations.findConsumersById(item.getValue());
+        for(Map.Entry<Long, Long> item : mapOfSumBuyAndConsumerId.entrySet()){
+            if(item.getValue() >= countProductBuy){
+                resultSet =  daoOperations.findConsumersById(item.getKey());
                 if (resultSet.next())
                     resultListConsumer.add(new Consumer(resultSet.getLong(1),
                                                         resultSet.getString(2),
                                                         resultSet.getString(3)));
             }
         }
-        return resultListConsumer
+        return resultListConsumer;
     }
 
+    /**
+     * Поиск покупателей, у которых общая стоимость всех покупок за всё время попадает в интервал
+     * @param minExpensesAllBuy - Минимальная стоимость всех покупок
+     * @param maxExpensesAllBuy - Максимальная стоимость всех покупок
+     * @return Возвращает список покупателей (объектов Consumer),
+     *         у которых общая стоимость всех покупок за всё время попадает в интервал
+     */
     @Override
     public List<Consumer> findConsumerByIntervalExpensesAllBuy(int minExpensesAllBuy, int maxExpensesAllBuy) {
+
         return null;
     }
+
+    /**
+     *  Поиск покупателей, купивших меньше всего товаров. Возвращается не более, чем указанное число покупателей.
+      * @param countBadConsumer - Число пассивных покупателей
+     * @return Возвращает список покупателей (объектов Consumer),
+     *         купивших меньше всего товаров. Возвращается не более, чем указанное число покупателей.
+     */
 
     @Override
     public List<Consumer> findBadConsumerByCountProductBuy(int countBadConsumer) {

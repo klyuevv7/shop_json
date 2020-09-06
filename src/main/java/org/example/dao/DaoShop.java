@@ -1,13 +1,10 @@
 package org.example.dao;
 
 import org.example.controller.DaoOperations;
-import org.example.model.Buy;
-
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 /**
  * Получает значения из таблиц базы данных
@@ -106,5 +103,4 @@ public class DaoShop implements DaoOperations {
         ResultSet resultSet = new DaoShop(new JDBCPostgreSQL().connection()).findConsumerBySurname("Иванов");
 
     }
-
 }

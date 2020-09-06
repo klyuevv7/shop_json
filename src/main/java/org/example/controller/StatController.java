@@ -12,6 +12,13 @@ public class StatController implements StatControllerOperations {
         this.daoOperations = daoOperations;
     }
 
+    /**
+     * На вход передаётся интервал дат сбора статистики. Результат операции -
+     * статистика по покупателям за период из двух дат, включительно, без выходных
+     * @param startDate - Начальная дата
+     * @param endDate - Конечная дата
+     * @return Возвращает статистику по покупателям за период из двух дат, включительно, без выходных
+     */
     @Override
     public List<Consumer> statConsumerByPeriod(Date startDate, Date endDate) {
         return null;
