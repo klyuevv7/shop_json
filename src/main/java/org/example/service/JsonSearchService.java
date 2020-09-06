@@ -41,8 +41,8 @@ public class JsonSearchService implements RequestService {
                 }
             }
             if(!keyCriterionFinded){
-//                return "{\"type\":\"error\",\"message\":\"Ключ не поддерживается " +
-//                         "в критерии поиска: " + criterion +"\"}";
+                return "{\"type\":\"error\",\"message\":\"Ключ не поддерживается " +
+                         "в критерии поиска: " + criterion +"\"}";
             }
 
 //            if (jsonObject.has("lastName")){

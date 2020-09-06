@@ -10,7 +10,7 @@ import java.util.Map;
  * реализующим интерфейс SearchOfCriterion
  */
 public class SelectCriterion {
-    private Map<String, SearchOfCriterion> criterion = new HashMap<>();
+    private final Map<String, SearchOfCriterion> criterion = new HashMap<>();
 
     public SelectCriterion(ServiceControllerOperations searchController) {
         criterion.put("lastName", new SearchOfCriterionLastName(searchController));

@@ -51,12 +51,15 @@ public class FillTablesDbShop {
             System.out.println("Таблица buy:");
 //            for (int i = 0; i < 2; i++)
 //            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (6, 1, '2020-05-29')");
-//            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (4, 2, '2020-05-24')");
+//            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (5, 4, '2020-05-25')");
 //            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (7, 2, '2020-05-26')");
 //            statement.executeUpdate("INSERT INTO public.product(name, price) VALUES ('Хлеб', 40)");
 //            statement.executeUpdate("INSERT INTO public.product(name, price) VALUES ('Сметана', 60)");
 //            statement.executeUpdate("INSERT INTO public.product(name, price) VALUES ('Колбаса', 230)");
 //            statement.executeUpdate("INSERT INTO public.product(name, price) VALUES ('Сыр', 180)");
+//            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (6, 1, '2020-01-10')");
+//            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (5, 4, '2020-01-25')");
+//            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (7, 2, '2020-01-26')");
 
             try (ResultSet result = statement.executeQuery("SELECT * FROM public.buy")){
 //                Date date[] = new Date[5]; int i = 0;

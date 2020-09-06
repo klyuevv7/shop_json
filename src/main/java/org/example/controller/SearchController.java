@@ -92,11 +92,7 @@ public class SearchController implements ServiceControllerOperations {
                                    resultSet.getLong(2),
                                    resultSet.getLong(3),
                                    resultSet.getDate(4)));
-//bbbbb
-        System.out.println("resultSet: "+ resultSet);
-        System.out.println("listAllBuy:");
-        for (Buy buy : listAllBuy)
-        System.out.println(buy);
+
         resultSet =  daoOperations.findAllProduct();
         List<Product> listAllProduct = new ArrayList<>();
         while (resultSet.next())
@@ -185,21 +181,29 @@ public class SearchController implements ServiceControllerOperations {
                 mapConsumerIdAndCountBuy.put(consumerId,1L);
             }
         }
-// Создание списка количества покупок и его сортировка
+// Создание списка количества покупок, его сортировка,
+// взять первые не более, чем указанное число покупателей, поместить в новый список
         List<Long> listCountBuy = new ArrayList<>();
         for (Long consumerId : mapConsumerIdAndCountBuy.keySet())
             listCountBuy.add(mapConsumerIdAndCountBuy.get(consumerId));
         Collections.sort(listCountBuy);
-// Создание списка покупателей, купивших меньше всего товаров.
-// Возвращается не более, чем указанное число покупателей.
-        List<Consumer> resultListConsumer = new ArrayList<>();
+        List<Long> listCountBuyBadConsumer = new ArrayList<>();
         for (int i = 0; i < countBadConsumer && i < listCountBuy.size(); i++){
-            long findedConsumerId = 0;
+            listCountBuyBadConsumer.add(listCountBuy.get(i));
+        }
+// Создание списка идентификаторов плохих покупателей
+        List<Long> listIdBadConsumer = new ArrayList<>();
+        for (Long elementListCountBuyBadConsumer : listCountBuyBadConsumer){
             for (Long consumerId : mapConsumerIdAndCountBuy.keySet())
-                if(listCountBuy.get(i).equals(mapConsumerIdAndCountBuy.get(consumerId))){
-                    findedConsumerId = consumerId; break;
+                if(elementListCountBuyBadConsumer.equals(mapConsumerIdAndCountBuy.get(consumerId))
+                   && !listIdBadConsumer.contains(consumerId)){
+                    listIdBadConsumer.add(consumerId); break;
                 }
-            resultSet =  daoOperations.findConsumersById(findedConsumerId);
+        }
+// Создание списка покупателей
+        List<Consumer> resultListConsumer = new ArrayList<>();
+        for (Long elementListIdBadConsumer : listIdBadConsumer) {
+            resultSet =  daoOperations.findConsumersById(elementListIdBadConsumer);
             if (resultSet.next())
                 resultListConsumer.add(new Consumer(resultSet.getLong(1),
                                                     resultSet.getString(2),

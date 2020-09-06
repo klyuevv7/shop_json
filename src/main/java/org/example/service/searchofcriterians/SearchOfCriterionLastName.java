@@ -24,6 +24,6 @@ public class SearchOfCriterionLastName implements SearchOfCriterion {
 
     @Override
     public String result(JSONObject jsonObject) throws SQLException {
-        return findConsumerBySurname((String) jsonObject.get("lastName"));
+        return findConsumerBySurname(jsonObject.getString("lastName"));
     }
 }

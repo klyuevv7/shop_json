@@ -27,7 +27,7 @@ public class SearchOfCriterionExpenses implements SearchOfCriterion{
 
     @Override
     public String result(JSONObject jsonObject) throws SQLException {
-        return findConsumerByIntervalExpensesAllBuy((int) jsonObject.get("minExpenses"),
-                (int) jsonObject.get("maxExpenses"));
+        return findConsumerByIntervalExpensesAllBuy(jsonObject.getInt("minExpenses"),
+                                                    jsonObject.getInt("maxExpenses"));
     }
 }

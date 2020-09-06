@@ -26,6 +26,6 @@ public class SearchOfCriterionBadCustomers implements SearchOfCriterion {
 
     @Override
     public String result(JSONObject jsonObject) throws SQLException {
-        return findBadConsumerByCountProductBuy((int) jsonObject.get("badCustomers"));
+        return findBadConsumerByCountProductBuy(jsonObject.getInt("badCustomers"));
     }
 }
