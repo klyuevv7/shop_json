@@ -42,13 +42,23 @@ public class JsonStatService implements RequestService {
             if((dayOfWeek == 1) || (dayOfWeek == 7)) weekendDay++;
         }
         days -= weekendDay;
+        if(days < 0){
+            return "{\"type\":\"error\",\"message\":\"Не верный период дат\"}";
+        }
 //--
-        List<Consumer> listConsumer = statController.findAllConsumers();
-        List<Product> listProduct = statController.findAllProducts();
+        List<Consumer> listConsumer = null;
+        List<Product> listProduct = null;
+        Map<Long, Map<Long, Long>> mapConsumerIdAndProductExpenses = null;
+        try {
+            listConsumer = statController.findAllConsumers();
+            listProduct =statController.findAllProducts();
 // Создание множества: ключ - идентификатор покупателя, значение - множество,
 // где ключ идентификатор товара, значение - стоимость покупок данного товара
-        Map<Long, Map<Long,Long>> mapConsumerIdAndProductExpenses
-           = statController.statConsumerByPeriod(startDate, endDate);
+            mapConsumerIdAndProductExpenses
+                    = statController.statConsumerByPeriod(startDate, endDate);
+        } catch (Exception e){
+            return "{\"type\":\"error\",\"message\":\"Ошибка сбора статистики\"}";
+        }
 
         StringBuilder result = new StringBuilder("{\"type\":\"stat\",\"totalDays\":" +
                                                  days + ",\"customers\":[");

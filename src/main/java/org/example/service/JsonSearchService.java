@@ -36,7 +36,11 @@ public class JsonSearchService implements RequestService {
             for (String keyCriterion : selectCriterion.getCriterion().keySet()){
                 if(jsonObject.has(keyCriterion)) {
                     keyCriterionFinded = true;
-                    result = selectCriterion.getCriterion().get(keyCriterion).result(jsonObject);
+                    try {
+                        result = selectCriterion.getCriterion().get(keyCriterion).result(jsonObject);
+                    } catch (Exception e){
+                        return "{\"type\":\"error\",\"message\":\"Ошибка критерия поиска\"}";
+                    }
                 }
             }
             if(!keyCriterionFinded){
