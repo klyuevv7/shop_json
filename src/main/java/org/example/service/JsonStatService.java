@@ -34,11 +34,14 @@ public class JsonStatService implements RequestService {
         long milliseconds = endDate.getTime() - startDate.getTime();
         int days = (int) (milliseconds / (24 * 60 * 60 * 1000));
 //--
-
+        int weekendDay = 0;
         Calendar c = Calendar.getInstance();
-        c.setTime(dateOfBuy);
-        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
-        if((dayOfWeek != 1) && (dayOfWeek != 7)){
+        for (int day = 0; day < days; day++){
+            c.setTime(new Date (startDate.getTime() + (long)day * 24 * 60 * 60 * 1000));
+            int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+            if((dayOfWeek == 1) || (dayOfWeek == 7)) weekendDay++;
+        }
+        days -= weekendDay;
 //--
         List<Consumer> listConsumer = statController.findAllConsumers();
         List<Product> listProduct = statController.findAllProducts();
