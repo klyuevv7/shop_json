@@ -33,6 +33,13 @@ public class JsonStatService implements RequestService {
         }
         long milliseconds = endDate.getTime() - startDate.getTime();
         int days = (int) (milliseconds / (24 * 60 * 60 * 1000));
+//--
+
+        Calendar c = Calendar.getInstance();
+        c.setTime(dateOfBuy);
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+        if((dayOfWeek != 1) && (dayOfWeek != 7)){
+//--
         List<Consumer> listConsumer = statController.findAllConsumers();
         List<Product> listProduct = statController.findAllProducts();
 // Создание множества: ключ - идентификатор покупателя, значение - множество,
