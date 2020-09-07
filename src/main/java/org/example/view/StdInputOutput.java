@@ -31,7 +31,7 @@ public class StdInputOutput {
         }
     }
 
-    public static void main(String[] args) throws IOException, SQLException {
+    public static void main(String[] args) throws SQLException {
         if(args.length != 3){
             System.out.println("Нужно указать 3 параметра: тип оперции, входной и выходной файл.");
             System.out.println("Пример аргментов: search input.json output.json");

@@ -3,7 +3,6 @@ package org.example.service;
 import org.example.controller.ServiceControllerOperations;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,26 +43,6 @@ public class JsonSearchService implements RequestService {
                 return "{\"type\":\"error\",\"message\":\"Ключ не поддерживается " +
                          "в критерии поиска: " + criterion +"\"}";
             }
-
-//            if (jsonObject.has("lastName")){
-//                List<String> keysOfCriterians = new ArrayList<>();
-//                keysOfCriterians.add((String) jsonObject.get("lastName"));
-//                result = selectCriterion.getCriterion().get("lastName").result(keysOfCriterians);
-//            } else
-//            if(jsonObject.has("productName")){
-//                String productName = (String) jsonObject.get("productName");
-//                int minTimes = (int) jsonObject.get("minTimes");
-//                result = findConsumerByCountProductBuy(productName, minTimes);
-//            } else
-//            if(jsonObject.has("minExpenses")){
-//                int minExpenses = (int) jsonObject.get("minExpenses");
-//                int maxExpenses = (int) jsonObject.get("maxExpenses");
-//                result = findConsumerByIntervalExpensesAllBuy(minExpenses,maxExpenses);
-//            } else
-//            if(jsonObject.has("badCustomers")){
-//                int badCustomers = (int) jsonObject.get("badCustomers");
-//                result = findBadConsumerByCountProductBuy(badCustomers);
-//            }
             mapCriteriasAndResult.put(criterion,result);
         }
         StringBuilder result = new StringBuilder("{\"type\":\"search\",\"results\":[");

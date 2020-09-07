@@ -10,7 +10,7 @@ import java.sql.Statement;
  * Получает значения из таблиц базы данных
  */
 public class DaoShop implements DaoOperations {
-    private Connection connection;
+    private final Connection connection;
     /**
      * @param connection -  соединение с базой данных
      */
@@ -78,22 +78,11 @@ public class DaoShop implements DaoOperations {
     }
 
     @Override
-    public ResultSet findProductById(long id) throws SQLException {
+    public ResultSet findAllConsumer() throws SQLException {
         if (connection != null) {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(
-                    "SELECT * FROM public.product where id = '"+ id + "'");
-            return result;
-        }
-        return null;
-    }
-
-    @Override
-    public ResultSet findBuyByConsumerId(long ConsumerId) throws SQLException {
-        if (connection != null) {
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(
-                    "SELECT * FROM public.buy where consumer = '"+ ConsumerId + "'");
+                    "SELECT * FROM public.consumer");
             return result;
         }
         return null;
@@ -101,6 +90,5 @@ public class DaoShop implements DaoOperations {
 
     public static void main(String[] args) throws SQLException {
         ResultSet resultSet = new DaoShop(new JDBCPostgreSQL().connection()).findConsumerBySurname("Иванов");
-
     }
 }

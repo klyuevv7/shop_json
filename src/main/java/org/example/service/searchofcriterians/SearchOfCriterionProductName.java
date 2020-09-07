@@ -3,13 +3,12 @@ package org.example.service.searchofcriterians;
 import org.example.controller.ServiceControllerOperations;
 import org.example.model.Consumer;
 import org.json.JSONObject;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchOfCriterionProductName implements SearchOfCriterion {
-    private ServiceControllerOperations searchController;
+    private final ServiceControllerOperations searchController;
 
     public SearchOfCriterionProductName(ServiceControllerOperations searchController) {
         this.searchController = searchController;

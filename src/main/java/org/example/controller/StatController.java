@@ -15,6 +15,40 @@ public class StatController implements StatControllerOperations {
         this.daoOperations = daoOperations;
     }
 
+    @Override
+    public List<Consumer> findAllConsumers() throws SQLException {
+        ResultSet resultSet =  daoOperations.findAllConsumer();
+        List<Consumer> listConsumer = new ArrayList<>();
+        while (resultSet.next())
+            listConsumer.add(new Consumer(resultSet.getLong(1),
+                                          resultSet.getString(2),
+                                          resultSet.getString(3)));
+        return listConsumer;
+    }
+
+    @Override
+    public List<Product> findAllProducts() throws SQLException {
+        ResultSet resultSet =  daoOperations.findAllProduct();
+        List<Product> listProduct = new ArrayList<>();
+        while (resultSet.next())
+            listProduct.add(new Product(resultSet.getLong(1),
+                                        resultSet.getString(2),
+                                        resultSet.getInt(3)));
+        return listProduct;
+    }
+
+    @Override
+    public List<Buy> findAllBuy() throws SQLException {
+        ResultSet resultSet =  daoOperations.findAllBuy();
+        List<Buy> listAllBuy = new ArrayList<>();
+        while (resultSet.next())
+            listAllBuy.add(new Buy(resultSet.getLong(1),
+                    resultSet.getLong(2),
+                    resultSet.getLong(3),
+                    resultSet.getDate(4)));
+        return listAllBuy;
+    }
+
     /**
      * На вход передаётся интервал дат сбора статистики. Результат операции -
      * статистика по покупателям за период из двух дат, включительно, без выходных
@@ -23,26 +57,10 @@ public class StatController implements StatControllerOperations {
      * @return Возвращает статистику по покупателям за период из двух дат, включительно, без выходных
      */
     @Override
-    public Map<Long, Map<Long,Long>> statConsumerByPeriod(Date startDate, Date endDate,
-                        List<Consumer> listConsumer, List<Product> listProduct) throws SQLException {
-        ResultSet resultSet =  daoOperations.findAllBuy();
-        List<Buy> listAllBuy = new ArrayList<>();
-        while (resultSet.next())
-            listAllBuy.add(new Buy(resultSet.getLong(1),
-                    resultSet.getLong(2),
-                    resultSet.getLong(3),
-                    resultSet.getDate(4)));
-        resultSet =  daoOperations.findAllProduct();
-        listConsumer = new ArrayList<>();
-        while (resultSet.next())
-            listConsumer.add(new Consumer(resultSet.getLong(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3)));
-        listProduct = new ArrayList<>();
-        while (resultSet.next())
-            listProduct.add(new Product(resultSet.getLong(1),
-                    resultSet.getString(2),
-                    resultSet.getInt(3)));
+    public Map<Long, Map<Long,Long>> statConsumerByPeriod(Date startDate, Date endDate)
+                                                throws SQLException {
+        List<Buy> listAllBuy = findAllBuy();
+        List<Product> listProduct = findAllProducts();
 // Создание списка покупок попадающих в период из двух дат, включительно, без выходных
         List<Buy> listAllBuyForPeriodWithoutWeekend = new ArrayList<>();
         for (Buy buy : listAllBuy){
@@ -76,6 +94,7 @@ public class StatController implements StatControllerOperations {
                 mapConsumerIdAndProductId.put(buy.getConsumerId(),mapProductIdAndCount);
             }
         }
+
 // Создание множества: ключ - идентификатор покупателя, значение - множество,
 // где ключ идентификатор товара, значение - стоимость покупок данного товара
         Map<Long,Map<Long,Long>> mapConsumerIdAndProductExpenses = new HashMap<>();
@@ -87,7 +106,6 @@ public class StatController implements StatControllerOperations {
                     long count = item.getValue().get(product.getId());
                     long expenses = product.getPrice() * count;
                     mapProductIdAndExpenses.put(product.getId(), expenses);
-                    break;
                 }
             mapConsumerIdAndProductExpenses.put(item.getKey(),mapProductIdAndExpenses);
         }

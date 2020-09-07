@@ -3,7 +3,6 @@ package org.example.controller;
 import org.example.model.Buy;
 import org.example.model.Consumer;
 import org.example.model.Product;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;

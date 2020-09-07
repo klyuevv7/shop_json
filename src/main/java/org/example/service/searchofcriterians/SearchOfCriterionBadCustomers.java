@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchOfCriterionBadCustomers implements SearchOfCriterion {
-    private ServiceControllerOperations searchController;
+    private final ServiceControllerOperations searchController;
 
     public SearchOfCriterionBadCustomers(ServiceControllerOperations searchController) {
         this.searchController = searchController;

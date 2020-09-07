@@ -12,6 +12,5 @@ public interface DaoOperations {
     ResultSet findAllBuy() throws SQLException;
     ResultSet findAllProduct() throws SQLException;
 
-    ResultSet findProductById(long id) throws SQLException;
-    ResultSet findBuyByConsumerId(long ConsumerId) throws SQLException;
+    ResultSet findAllConsumer() throws SQLException;
 }

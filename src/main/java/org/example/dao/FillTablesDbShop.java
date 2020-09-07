@@ -22,6 +22,7 @@ public class FillTablesDbShop {
 //            statement.executeUpdate("INSERT INTO public.consumer(name, surname) VALUES ('Николай', 'Иванов')");
 //            statement.executeUpdate("INSERT INTO public.consumer(name, surname) VALUES ('Валентин', 'Петров')");
 //            statement.executeUpdate("INSERT INTO public.consumer(name, surname) VALUES ('Антон', 'Сидоров')");
+//            statement.executeUpdate("INSERT INTO public.consumer(name, surname) VALUES ('Антон', 'Федоров')");
 //            statement.executeUpdate("UPDATE public.consumer SET name = 'Николай' where id = 5");
 //            statement.executeUpdate("DELETE FROM public.consumer where name = 'Ivan'");
 
@@ -58,22 +59,20 @@ public class FillTablesDbShop {
 //            statement.executeUpdate("INSERT INTO public.product(name, price) VALUES ('Колбаса', 230)");
 //            statement.executeUpdate("INSERT INTO public.product(name, price) VALUES ('Сыр', 180)");
 //            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (6, 1, '2020-01-10')");
-//            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (5, 4, '2020-01-25')");
+//            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (8, 5, '2020-01-24')");
+//            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (8, 3, '2020-01-23')");
+//            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (7, 4, '2020-01-23')");
+//            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (7, 1, '2020-01-24')");
 //            statement.executeUpdate("INSERT INTO public.buy(consumer, product, date) VALUES (7, 2, '2020-01-26')");
 
             try (ResultSet result = statement.executeQuery("SELECT * FROM public.buy")){
-//                Date date[] = new Date[5]; int i = 0;
                 while (result.next()){
-//                    date[i] = result.getDate(4); i++;
                     System.out.println(result.getString(1) + " " +
                             result.getString(2) + " " +
                             result.getString(3) + " " +
                             result.getDate(4));
                 }
-//                System.out.println(date[1].getDate()-date[0].getDate());
             }
-
-
         }
     }
     public static void main(String[] args) throws SQLException {

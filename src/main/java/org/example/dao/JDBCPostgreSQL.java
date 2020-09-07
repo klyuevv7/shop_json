@@ -46,7 +46,6 @@ public class JDBCPostgreSQL {
         } else {
             System.out.println("Failed to make connection to database");
         }
-
         return connection;
     }
 }
