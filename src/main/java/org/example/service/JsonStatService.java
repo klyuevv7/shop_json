@@ -2,9 +2,12 @@ package org.example.service;
 
 import org.example.controller.StatControllerOperations;
 import org.example.model.Consumer;
+import org.example.model.Product;
+import org.example.service.forStatService.Purchases;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -21,10 +24,10 @@ public class JsonStatService implements RequestService {
 
 
     @Override
-    public String result(String request) {
-        JSONObject jsonObject = new JSONObject(request);
-        String stringstartDate = jsonObject.getString("startDate");
-        String stringendDate = jsonObject.getString("endDate");
+    public String result(String request) throws SQLException {
+        JSONObject jsonRequest = new JSONObject(request);
+        String stringstartDate = jsonRequest.getString("startDate");
+        String stringendDate = jsonRequest.getString("endDate");
         Date startDate = null;
         Date endDate = null;
         try{
@@ -33,53 +36,53 @@ public class JsonStatService implements RequestService {
         }catch(Exception e){
             System.out.println(e);
         }
-        List<Consumer> listConsumers =
-                statController.statConsumerByPeriod(startDate, endDate);
-        List<JSONObject> jsonObjectList = new ArrayList<>();
-        for(Consumer consumer : listConsumers)
-            jsonObjectList.add(consumer.toJSONObject());
-//        return jsonObjectList.toString();
+        List<Consumer> listConsumer = new ArrayList<>();
+        List<Product> listProduct = new ArrayList<>();
+// Создание множества: ключ - идентификатор покупателя, значение - множество,
+// где ключ идентификатор товара, значение - стоимость покупок данного товара
+        Map<Long, Map<Long,Long>> mapConsumerIdAndProductExpenses
+           = statController.statConsumerByPeriod(startDate, endDate, listConsumer, listProduct);
 
-//----
-
-//        JSONArray criterias = jsonRequest.getJSONArray("criterias");
-// Список всех критериев поиска (могут повторяться)
-//        List<String> listCriterias = new ArrayList<>();
-// Набор всех критериев поиска с результатами поиска
-//        Map<String, String> mapCriteriasAndResult = new HashMap<>();
-//        SelectCriterion selectCriterion = new SelectCriterion(searchController);
-//        for (Object object : criterias) {
-//            String criterion = object.toString();
-//            listCriterias.add(criterion);
-// Если критерий поиска уже был, то искать результат не нужно, он есть в данном наборе
-//            if(mapCriteriasAndResult.containsKey(criterion)) continue;
-//            JSONObject jsonObject = ((JSONObject) object);
-//            String result = null;
-//            boolean keyCriterionFinded = false;
-//            for (String keyCriterion : selectCriterion.getCriterion().keySet()){
-//                if(jsonObject.has(keyCriterion)) {
-//                    keyCriterionFinded = true;
-//                    result = selectCriterion.getCriterion().get(keyCriterion).result(jsonObject);
-//                }
-//            }
-//            if(!keyCriterionFinded){
-//                return "{\"type\":\"error\",\"message\":\"Ключ не поддерживается " +
-//                         "в критерии поиска: " + criterion +"\"}";
-//            }
-//            mapCriteriasAndResult.put(criterion,result);
-//        }
-//        StringBuilder result = new StringBuilder("{\"type\":\"search\",\"results\":[");
-//        for (String criterion : listCriterias){
-//            result.append("{\"criteria\":");
-//            result.append(criterion);
-//            result.append(",\"results\":");
-//            result.append(mapCriteriasAndResult.get(criterion));
-//            result.append("},");
-//        }
-//        int endChar = result.length();
-//        result.delete(endChar-1, endChar);
-//        result.append("]}");
-//        return result.toString();
-        return "None";
+        StringBuilder result = new StringBuilder("{\"type\":\"stat\",\"totalDays\":" +
+                (endDate.getDay() - startDate.getDay()) + ",\"customers\":[");
+        long totalExpensesAllConsumer = 0;
+        for (Map.Entry<Long,Map<Long,Long>> itemByConsumerId : mapConsumerIdAndProductExpenses.entrySet()) {
+            String consumerSurname = null;
+            String consumerName = null;
+            for (Consumer consumer : listConsumer){
+                if(consumer.getId() == itemByConsumerId.getKey()){
+                    consumerName = consumer.getName();
+                    consumerSurname = consumer.getSurname(); break;
+                }
+            }
+            result.append("{\"name\":\"" + consumerSurname + " " + consumerName + ",\"purchases\":[");
+            Map<Long,Long> mapProductExpenses = mapConsumerIdAndProductExpenses.get(itemByConsumerId.getKey());
+//            List<JSONObject> jsonObjectListPurchases = new ArrayList<>();
+            long totalExpenses = 0;
+            for (Map.Entry<Long,Long> itemByProductId : mapProductExpenses.entrySet()){
+                String productName = null;
+                for (Product product : listProduct){
+                    if(product.getId() == itemByProductId.getKey()){
+                        productName = product.getName(); break;
+                    }
+                }
+                long expenses = itemByProductId.getValue();
+//                jsonObjectListPurchases.add(new Purchases(productName, expenses).toJSONObject());
+                result.append(new Purchases(productName, expenses).toJSONObject() + ",");
+                totalExpenses =+ expenses;
+//                return jsonObjectList.toString();
+            }
+            int endChar = result.length();
+            result.delete(endChar-1, endChar);
+            result.append("\"totalExpenses\":" + totalExpenses + "},");
+            totalExpensesAllConsumer =+ totalExpenses;
+        }
+        int endChar = result.length();
+        result.delete(endChar-1, endChar);
+        result.append("],\"totalExpenses\":" + totalExpensesAllConsumer + ",");
+        double avgExpenses = totalExpensesAllConsumer /
+                (double) mapConsumerIdAndProductExpenses.entrySet().size();
+        result.append("\"avgExpenses\":" + avgExpenses + "}");
+        return result.toString();
     }
 }
