@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 
 public interface StatControllerOperations {
-    List<Consumer> findAllConsumers() throws SQLException;
-    List<Product> findAllProducts() throws SQLException;
-    List<Buy> findAllBuy() throws SQLException;
+    List<Consumer> findAllConsumers() throws Exception;
+    List<Product> findAllProducts() throws Exception;
+    List<Buy> findAllBuy() throws Exception;
     Map<Long, Map<Long,Long>> statConsumerByPeriod(Date startDate, Date endDate)
-                                         throws SQLException;
+            throws Exception;
 }

@@ -3,7 +3,6 @@ package org.example.service;
 import org.example.controller.ServiceControllerOperations;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,9 +16,15 @@ public class JsonSearchService implements RequestService {
     }
 
     @Override
-    public String result(String request) throws SQLException {
-        JSONObject jsonRequest = new JSONObject(request);
-        JSONArray criterias = jsonRequest.getJSONArray("criterias");
+    public String result(String request) throws Exception {
+        JSONObject jsonRequest = null;
+        JSONArray criterias = null;
+        try {
+            jsonRequest = new JSONObject(request);
+            criterias = jsonRequest.getJSONArray("criterias");
+        } catch (Exception e){
+            return "{\"type\":\"error\",\"message\":\"Ошибка получения критериев поиска\"}";
+        }
 // Список всех критериев поиска (могут повторяться)
         List<String> listCriterias = new ArrayList<>();
 // Набор всех критериев поиска с результатами поиска
@@ -36,11 +41,7 @@ public class JsonSearchService implements RequestService {
             for (String keyCriterion : selectCriterion.getCriterion().keySet()){
                 if(jsonObject.has(keyCriterion)) {
                     keyCriterionFinded = true;
-                    try {
                         result = selectCriterion.getCriterion().get(keyCriterion).result(jsonObject);
-                    } catch (Exception e){
-                        return "{\"type\":\"error\",\"message\":\"Ошибка критерия поиска\"}";
-                    }
                 }
             }
             if(!keyCriterionFinded){

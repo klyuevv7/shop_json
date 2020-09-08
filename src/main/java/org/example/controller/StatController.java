@@ -3,9 +3,7 @@ package org.example.controller;
 import org.example.model.Buy;
 import org.example.model.Consumer;
 import org.example.model.Product;
-
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 public class StatController implements StatControllerOperations {
@@ -16,7 +14,7 @@ public class StatController implements StatControllerOperations {
     }
 
     @Override
-    public List<Consumer> findAllConsumers() throws SQLException {
+    public List<Consumer> findAllConsumers() throws Exception {
         ResultSet resultSet =  daoOperations.findAllConsumer();
         List<Consumer> listConsumer = new ArrayList<>();
         while (resultSet.next())
@@ -27,7 +25,7 @@ public class StatController implements StatControllerOperations {
     }
 
     @Override
-    public List<Product> findAllProducts() throws SQLException {
+    public List<Product> findAllProducts() throws Exception {
         ResultSet resultSet =  daoOperations.findAllProduct();
         List<Product> listProduct = new ArrayList<>();
         while (resultSet.next())
@@ -38,7 +36,7 @@ public class StatController implements StatControllerOperations {
     }
 
     @Override
-    public List<Buy> findAllBuy() throws SQLException {
+    public List<Buy> findAllBuy() throws Exception {
         ResultSet resultSet =  daoOperations.findAllBuy();
         List<Buy> listAllBuy = new ArrayList<>();
         while (resultSet.next())
@@ -57,8 +55,7 @@ public class StatController implements StatControllerOperations {
      * @return Возвращает статистику по покупателям за период из двух дат, включительно, без выходных
      */
     @Override
-    public Map<Long, Map<Long,Long>> statConsumerByPeriod(Date startDate, Date endDate)
-                                                throws SQLException {
+    public Map<Long, Map<Long,Long>> statConsumerByPeriod(Date startDate, Date endDate) throws Exception {
         List<Buy> listAllBuy = findAllBuy();
         List<Product> listProduct = findAllProducts();
 // Создание списка покупок попадающих в период из двух дат, включительно, без выходных

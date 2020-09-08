@@ -19,76 +19,88 @@ public class DaoShop implements DaoOperations {
     }
 
     @Override
-    public ResultSet findConsumerBySurname(String surName) throws SQLException {
-        if (connection != null) {
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(
-                    "SELECT * FROM public.consumer where surname = '"+ surName + "'");
-            return result;
+    public ResultSet findConsumerBySurname(String surName) throws Exception {
+        try {
+                Statement statement = connection.createStatement();
+                ResultSet result = statement.executeQuery(
+                        "SELECT * FROM public.consumer where surname = '"+ surName + "'");
+                return result;
+        } catch (Exception e) {
+            throw new Exception("Ошибка получения данных из таблицы покупателей в БД");
         }
-        return null;
     }
 
     @Override
-    public ResultSet findBuyByProduct(String productName) throws SQLException {
-        if (connection != null) {
+    public ResultSet findBuyByProduct(String productName) throws Exception {
+        ResultSet result = null;
+        try {
+                Statement statement = connection.createStatement();
+                result = statement.executeQuery(
+                        "SELECT id FROM public.product where name = '"+ productName + "'");
+        } catch (Exception e) {
+            throw new Exception("Ошибка получения данных из таблицы товаров в БД");
+        }
+        try {
             Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(
-                    "SELECT id FROM public.product where name = '"+ productName + "'");
             long productId = 0;
             if (result.next()) productId = result.getLong(1);
             result = statement.executeQuery(
                     "SELECT * FROM public.buy where product = '"+ productId + "'");
             return result;
+        } catch (Exception e) {
+            throw new Exception("Ошибка получения данных из таблицы покупок в БД");
         }
-        return null;
     }
 
     @Override
-    public ResultSet findConsumersById(long id) throws SQLException {
-        if (connection != null) {
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery(
-                    "SELECT * FROM public.consumer where id = '"+ id + "'");
-            return result;
+    public ResultSet findConsumersById(long id) throws Exception {
+        try {
+                Statement statement = connection.createStatement();
+                ResultSet result = statement.executeQuery(
+                        "SELECT * FROM public.consumer where id = '"+ id + "'");
+                return result;
+        } catch (Exception e) {
+            throw new Exception("Ошибка получения данных из таблицы покупателей в БД");
         }
-        return null;
     }
 
     @Override
-    public ResultSet findAllBuy() throws SQLException {
-        if (connection != null) {
+    public ResultSet findAllBuy() throws Exception {
+        try {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(
                     "SELECT * FROM public.buy");
             return result;
+        } catch (Exception e) {
+            throw new Exception("Ошибка получения данных из таблицы покупок в БД");
         }
-        return null;
     }
 
     @Override
-    public ResultSet findAllProduct() throws SQLException {
-        if (connection != null) {
+    public ResultSet findAllProduct() throws Exception {
+        try {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(
                     "SELECT * FROM public.product");
             return result;
+        } catch (Exception e) {
+            throw new Exception("Ошибка получения данных из таблицы товаров в БД");
         }
-        return null;
     }
 
     @Override
-    public ResultSet findAllConsumer() throws SQLException {
-        if (connection != null) {
+    public ResultSet findAllConsumer() throws Exception {
+        try {
             Statement statement = connection.createStatement();
             ResultSet result = statement.executeQuery(
                     "SELECT * FROM public.consumer");
             return result;
+        } catch (Exception e) {
+            throw new Exception("Ошибка получения данных из таблицы покупателей в БД");
         }
-        return null;
     }
 
     public static void main(String[] args) throws SQLException {
-        ResultSet resultSet = new DaoShop(new JDBCPostgreSQL().connection()).findConsumerBySurname("Иванов");
+//        ResultSet resultSet = new DaoShop(new JDBCPostgreSQL().connection()).findConsumerBySurname("Иванов");
     }
 }

@@ -4,7 +4,6 @@ import org.example.model.Buy;
 import org.example.model.Consumer;
 import org.example.model.Product;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 public class SearchController implements ServiceControllerOperations {
@@ -18,10 +17,9 @@ public class SearchController implements ServiceControllerOperations {
      * Поиск покупателей с этой фамилией
       * @param lastName - Фамилия
      * @return Возвращает список покупателей (объектов Consumer) с этой фамилией
-     * @throws SQLException
      */
     @Override
-    public List<Consumer> findConsumerBySurname(String lastName) throws SQLException {
+    public List<Consumer> findConsumerBySurname(String lastName) throws Exception {
         ResultSet resultSet =  daoOperations.findConsumerBySurname(lastName);
         List<Consumer> listConsumer = new ArrayList<>();
         while (resultSet.next())
@@ -37,11 +35,10 @@ public class SearchController implements ServiceControllerOperations {
      * @param countProductBuy -  Число раз
      * @return Возвращает список покупателей (объектов Consumer),
      *         купивших этот товар не менее, чем указанное число раз
-     * @throws SQLException
      */
     @Override
     public List<Consumer> findConsumerByCountProductBuy(String nameProduct, int countProductBuy)
-                                             throws SQLException {
+                                                                            throws Exception {
         ResultSet resultSet =  daoOperations.findBuyByProduct(nameProduct);
         List<Buy> listBuyByProduct = new ArrayList<>();
         while (resultSet.next())
@@ -83,7 +80,7 @@ public class SearchController implements ServiceControllerOperations {
      */
     @Override
     public List<Consumer> findConsumerByIntervalExpensesAllBuy(int minExpensesAllBuy, int maxExpensesAllBuy)
-                                                                throws SQLException {
+                                                                                        throws Exception {
         ResultSet resultSet =  daoOperations.findAllBuy();
         List<Buy> listAllBuy = new ArrayList<>();
         while (resultSet.next())
@@ -161,7 +158,7 @@ public class SearchController implements ServiceControllerOperations {
      *         купивших меньше всего товаров. Возвращается не более, чем указанное число покупателей.
      */
     @Override
-    public List<Consumer> findBadConsumerByCountProductBuy(int countBadConsumer) throws SQLException {
+    public List<Consumer> findBadConsumerByCountProductBuy(int countBadConsumer) throws Exception {
         ResultSet resultSet =  daoOperations.findAllBuy();
         List<Buy> listAllBuy = new ArrayList<>();
         while (resultSet.next())

@@ -1,16 +1,15 @@
 package org.example.controller;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 public interface DaoOperations {
-    ResultSet findConsumerBySurname(String surname) throws SQLException;
+    ResultSet findConsumerBySurname(String surname) throws Exception;
 
-    ResultSet findBuyByProduct(String productName) throws SQLException;
-    ResultSet findConsumersById(long id) throws SQLException;
+    ResultSet findBuyByProduct(String productName) throws Exception;
+    ResultSet findConsumersById(long id) throws Exception;
 
-    ResultSet findAllBuy() throws SQLException;
-    ResultSet findAllProduct() throws SQLException;
+    ResultSet findAllBuy() throws Exception;
+    ResultSet findAllProduct() throws Exception;
 
-    ResultSet findAllConsumer() throws SQLException;
+    ResultSet findAllConsumer() throws Exception;
 }

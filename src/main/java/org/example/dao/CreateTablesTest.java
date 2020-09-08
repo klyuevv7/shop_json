@@ -33,7 +33,7 @@ public class CreateTablesTest {
 
         }
     }
-    public static void main(String[] args) throws SQLException {
-        new CreateTablesTest(new JDBCPostgreSQL().connection()).createGreetings();
+    public static void main(String[] args)  {
+//        new CreateTablesTest(new JDBCPostgreSQL().connection()).createGreetings();
     }
 }

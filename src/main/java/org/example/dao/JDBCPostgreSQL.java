@@ -17,18 +17,19 @@ public class JDBCPostgreSQL {
      * @return Возвращает соединение с базой данных
      * или null, если соединение с БД не установлено.
      */
-    public Connection connection(){
-        System.out.println("Testing connection to PostgreSQL JDBC");
+    public Connection connection() throws Exception {
+//        System.out.println("Testing connection to PostgreSQL JDBC");
 
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
-            System.out.println("PostgreSQL JDBC Driver is not found. Include it in your library path ");
-            e.printStackTrace();
-            return null;
+            throw new Exception("PostgreSQL JDBC Driver is not found. Include it in your library path");
+//            System.out.println("PostgreSQL JDBC Driver is not found. Include it in your library path");
+//            e.printStackTrace();
+//            return null;
         }
 
-        System.out.println("PostgreSQL JDBC Driver successfully connected");
+//        System.out.println("PostgreSQL JDBC Driver successfully connected");
         Connection connection = null;
 
         try {
@@ -36,15 +37,17 @@ public class JDBCPostgreSQL {
                     .getConnection(DB_URL, USER, PASS);
 
         } catch (SQLException e) {
-            System.out.println("Connection Failed");
-            e.printStackTrace();
-            return null;
+            throw new Exception("Connection to DB failed");
+//            System.out.println("Connection Failed");
+//            e.printStackTrace();
+//            return null;
         }
 
         if (connection != null) {
-            System.out.println("You successfully connected to database now");
+//            System.out.println("You successfully connected to database now");
         } else {
-            System.out.println("Failed to make connection to database");
+            throw new Exception("Failed to make connection to database");
+//            System.out.println("Failed to make connection to database");
         }
         return connection;
     }

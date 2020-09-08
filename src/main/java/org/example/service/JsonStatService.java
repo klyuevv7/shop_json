@@ -5,7 +5,6 @@ import org.example.model.Consumer;
 import org.example.model.Product;
 import org.example.service.forStatService.Purchases;
 import org.json.JSONObject;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -19,21 +18,28 @@ public class JsonStatService implements RequestService {
     }
 
     @Override
-    public String result(String request) throws SQLException {
-        JSONObject jsonRequest = new JSONObject(request);
-        String stringstartDate = jsonRequest.getString("startDate");
-        String stringendDate = jsonRequest.getString("endDate");
+    public String result(String request) throws Exception {
+        JSONObject jsonRequest = null;
+        String stringstartDate = null;
+        String stringendDate = null;
+        try {
+            jsonRequest = new JSONObject(request);
+            stringstartDate = jsonRequest.getString("startDate");
+            stringendDate = jsonRequest.getString("endDate");
+        } catch (Exception e){
+            return "{\"type\":\"error\",\"message\":\"Ошибка получения периода дат\"}";
+        }
         Date startDate = null;
         Date endDate = null;
         try{
             startDate = new SimpleDateFormat("yyyy-MM-dd").parse(stringstartDate);
             endDate =  new SimpleDateFormat("yyyy-MM-dd").parse(stringendDate);
         }catch(Exception e){
-            System.out.println(e);
+            throw new Exception("Не верно задан период дат");
         }
         long milliseconds = endDate.getTime() - startDate.getTime();
         int days = (int) (milliseconds / (24 * 60 * 60 * 1000));
-//--
+
         int weekendDay = 0;
         Calendar c = Calendar.getInstance();
         for (int day = 0; day < days; day++){
@@ -42,23 +48,16 @@ public class JsonStatService implements RequestService {
             if((dayOfWeek == 1) || (dayOfWeek == 7)) weekendDay++;
         }
         days -= weekendDay;
-        if(days < 0){
-            return "{\"type\":\"error\",\"message\":\"Не верный период дат\"}";
-        }
-//--
+        if(days < 0) days = 0;
         List<Consumer> listConsumer = null;
         List<Product> listProduct = null;
         Map<Long, Map<Long, Long>> mapConsumerIdAndProductExpenses = null;
-        try {
             listConsumer = statController.findAllConsumers();
             listProduct =statController.findAllProducts();
 // Создание множества: ключ - идентификатор покупателя, значение - множество,
 // где ключ идентификатор товара, значение - стоимость покупок данного товара
             mapConsumerIdAndProductExpenses
                     = statController.statConsumerByPeriod(startDate, endDate);
-        } catch (Exception e){
-            return "{\"type\":\"error\",\"message\":\"Ошибка сбора статистики\"}";
-        }
 
         StringBuilder result = new StringBuilder("{\"type\":\"stat\",\"totalDays\":" +
                                                  days + ",\"customers\":[");
@@ -76,7 +75,6 @@ public class JsonStatService implements RequestService {
                    append(consumerSurname).append(" ").
                    append(consumerName).append(",\"purchases\":[");
             Map<Long,Long> mapProductExpenses = mapConsumerIdAndProductExpenses.get(itemByConsumerId.getKey());
-//            List<JSONObject> jsonObjectListPurchases = new ArrayList<>();
             long totalExpenses = 0;
             for (Map.Entry<Long,Long> itemByProductId : mapProductExpenses.entrySet()){
                 String productName = null;
@@ -86,10 +84,8 @@ public class JsonStatService implements RequestService {
                     }
                 }
                 long expenses = itemByProductId.getValue();
-//                jsonObjectListPurchases.add(new Purchases(productName, expenses).toJSONObject());
                 result.append(new Purchases(productName, expenses).toJSONObject()).append(",");
                 totalExpenses = totalExpenses + expenses;
-//                return jsonObjectList.toString();
             }
             int endChar = result.length();
             result.delete(endChar-1, endChar);
@@ -101,8 +97,9 @@ public class JsonStatService implements RequestService {
             result.delete(endChar-1, endChar);
         }
         result.append("],\"totalExpenses\":").append(totalExpensesAllConsumer).append(",");
-        double avgExpenses = totalExpensesAllConsumer /
-                (double) mapConsumerIdAndProductExpenses.entrySet().size();
+        double totalConsumer = mapConsumerIdAndProductExpenses.entrySet().size();
+        double avgExpenses = 0;
+        if (totalConsumer != 0) avgExpenses = totalExpensesAllConsumer / totalConsumer;
         String stringFormatedAvgExpenses = format("%.2f", avgExpenses);
         result.append("\"avgExpenses\":").append(stringFormatedAvgExpenses).append("}");
         return result.toString();
