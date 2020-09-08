@@ -75,8 +75,8 @@ public class FillTablesDbShop {
             }
         }
     }
-    public static void main(String[] args)  {
-//        new FillTablesDbShop(new JDBCPostgreSQL().connection()).fillExecute();
+    public static void main(String[] args) throws Exception {
+        new FillTablesDbShop(new JDBCPostgreSQL().connection()).fillExecute();
     }
 
 }

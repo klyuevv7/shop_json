@@ -100,7 +100,7 @@ public class DaoShop implements DaoOperations {
         }
     }
 
-    public static void main(String[] args) throws SQLException {
-//        ResultSet resultSet = new DaoShop(new JDBCPostgreSQL().connection()).findConsumerBySurname("Иванов");
+    public static void main(String[] args) throws Exception {
+        ResultSet resultSet = new DaoShop(new JDBCPostgreSQL().connection()).findConsumerBySurname("Иванов");
     }
 }

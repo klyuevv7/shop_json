@@ -33,7 +33,7 @@ public class CreateTablesTest {
 
         }
     }
-    public static void main(String[] args)  {
-//        new CreateTablesTest(new JDBCPostgreSQL().connection()).createGreetings();
+    public static void main(String[] args) throws Exception {
+        new CreateTablesTest(new JDBCPostgreSQL().connection()).createGreetings();
     }
 }

@@ -2,7 +2,6 @@ package org.example.controller;
 
 import org.example.model.Consumer;
 
-import java.sql.SQLException;
 import java.util.List;
 
 public interface ServiceControllerOperations {
