@@ -46,20 +46,14 @@ public class SearchController implements ServiceControllerOperations {
                                          resultSet.getLong(2),
                                          resultSet.getLong(3),
                                          resultSet.getDate(4)));
-// Множество: идентификатор покупателя и сумма покупок
-        Map <Long, Long> mapOfSumBuyAndConsumerId = new HashMap<>();
-        for (Buy buy : listBuyByProduct) {
-            Long consumerId = buy.getConsumerId();
-            if (mapOfSumBuyAndConsumerId.containsKey(consumerId)) {
-                Long countProduct = mapOfSumBuyAndConsumerId.get(consumerId) + 1;
-                mapOfSumBuyAndConsumerId.put(consumerId, countProduct);
-            } else {
-                mapOfSumBuyAndConsumerId.put(consumerId, 1L);
-            }
-        }
+// Создание множества: ключ - идентификатор покупателя, значение - количество покупок товара
+        final Map<Long, Long> mapOfConsumerIdAndCountBuy = new HashMap<>();
+        listBuyByProduct.forEach((a) -> mapOfConsumerIdAndCountBuy.put(a.getConsumerId(),
+                (mapOfConsumerIdAndCountBuy.containsKey(a.getConsumerId())) ?
+                        mapOfConsumerIdAndCountBuy.get(a.getConsumerId()) + 1 : 1L));
 // Формируется список покупателей, купивших этот товар не менее, чем указанное число раз
         List<Consumer> resultListConsumer = new ArrayList<>();
-        for(Map.Entry<Long, Long> item : mapOfSumBuyAndConsumerId.entrySet()){
+        for(Map.Entry<Long, Long> item : mapOfConsumerIdAndCountBuy.entrySet()){
             if(item.getValue() >= countProductBuy){
                 resultSet =  daoOperations.findConsumersById(item.getKey());
                 if (resultSet.next())
@@ -101,13 +95,11 @@ public class SearchController implements ServiceControllerOperations {
         Map<Long,Long> mapProductIdAndCount = null;
         for (Buy buy: listAllBuy) {
                 if(mapConsumerIdAndProductId.containsKey(buy.getConsumerId())){
-                    if(mapConsumerIdAndProductId.get(buy.getConsumerId()).containsKey(buy.getProductId())) {
-                        Long count =
-                        mapConsumerIdAndProductId.get(buy.getConsumerId()).get(buy.getProductId()) + 1;
-                        mapConsumerIdAndProductId.get(buy.getConsumerId()).put(buy.getProductId(),count);
-                    } else {
-                        mapConsumerIdAndProductId.get(buy.getConsumerId()).put(buy.getProductId(),1L);
-                    }
+                    mapConsumerIdAndProductId.get(buy.getConsumerId()).put(
+                            buy.getProductId(),
+                            mapConsumerIdAndProductId.get(buy.getConsumerId()).containsKey(buy.getProductId()) ?
+                            (mapConsumerIdAndProductId.get(buy.getConsumerId()).get(buy.getProductId()) + 1) :
+                            1L);
                 } else {
                     mapProductIdAndCount = new HashMap<>();
                     mapProductIdAndCount.put(buy.getProductId(),1L);
@@ -167,21 +159,15 @@ public class SearchController implements ServiceControllerOperations {
                     resultSet.getLong(3),
                     resultSet.getDate(4)));
 // Создание множества: ключ - идентификатор покупателя, значение - количество покупок товара
-        Map<Long,Long> mapConsumerIdAndCountBuy = new HashMap<>();
-        for (Buy buy: listAllBuy) {
-            long consumerId = buy.getConsumerId();
-            if (mapConsumerIdAndCountBuy.containsKey(consumerId)){
-                long countBuy = mapConsumerIdAndCountBuy.get(consumerId) + 1;
-                mapConsumerIdAndCountBuy.put(consumerId,countBuy);
-            } else {
-                mapConsumerIdAndCountBuy.put(consumerId,1L);
-            }
-        }
+        final Map<Long, Long> mapOfConsumerIdAndCountBuy = new HashMap<>();
+        listAllBuy.forEach((a) -> mapOfConsumerIdAndCountBuy.put(a.getConsumerId(),
+                (mapOfConsumerIdAndCountBuy.containsKey(a.getConsumerId())) ?
+                        mapOfConsumerIdAndCountBuy.get(a.getConsumerId()) + 1 : 1L));
 // Создание списка количества покупок, его сортировка,
 // взять первые не более, чем указанное число покупателей, поместить в новый список
         List<Long> listCountBuy = new ArrayList<>();
-        for (Long consumerId : mapConsumerIdAndCountBuy.keySet())
-            listCountBuy.add(mapConsumerIdAndCountBuy.get(consumerId));
+        for (Long consumerId : mapOfConsumerIdAndCountBuy.keySet())
+            listCountBuy.add(mapOfConsumerIdAndCountBuy.get(consumerId));
         Collections.sort(listCountBuy);
         List<Long> listCountBuyBadConsumer = new ArrayList<>();
         for (int i = 0; i < countBadConsumer && i < listCountBuy.size(); i++){
@@ -190,8 +176,8 @@ public class SearchController implements ServiceControllerOperations {
 // Создание списка идентификаторов плохих покупателей
         List<Long> listIdBadConsumer = new ArrayList<>();
         for (Long elementListCountBuyBadConsumer : listCountBuyBadConsumer){
-            for (Long consumerId : mapConsumerIdAndCountBuy.keySet())
-                if(elementListCountBuyBadConsumer.equals(mapConsumerIdAndCountBuy.get(consumerId))
+            for (Long consumerId : mapOfConsumerIdAndCountBuy.keySet())
+                if(elementListCountBuyBadConsumer.equals(mapOfConsumerIdAndCountBuy.get(consumerId))
                    && !listIdBadConsumer.contains(consumerId)){
                     listIdBadConsumer.add(consumerId); break;
                 }
